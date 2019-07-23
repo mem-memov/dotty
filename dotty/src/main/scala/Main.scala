@@ -3,15 +3,13 @@ object Main {
   def main(args: Array[String]): Unit = {
 
     import vo._
-    val у1 = Утверждение(None, Map(Вопрос("где") -> List(Ответ("низ"))))
-    val у2 = Утверждение(None, Map(Вопрос("кто") -> List(Ответ("собака"))))
-    val у3 = Утверждение(None, Map(Вопрос("когда") -> List(Ответ("ночь"), Ответ("день"))))
-    val у4 = Утверждение(None, Map(Вопрос("когда") -> List(Ответ("ночь"))))
-    val у5 = Утверждение(None, Map(Вопрос("зачем") -> List()))
-    val у = Утверждение(Some(Действие("лаять")))
-    
-    println(у + у1 + у2 + у3 + у4 + у5)
-    println(у + у1 + у2 + у3 - у4 + у5)
 
+    val empty = Description()
+    val consist = Description(Some(Question("what do")), Some(Answer("consist")));    
+    val map = Description(Some(Question("what")), Some(Answer("map")));
+
+    val sentence =  empty + map
+
+    println(sentence)
   }
 }

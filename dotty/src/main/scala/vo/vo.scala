@@ -1,33 +1,44 @@
 package vo
 
-case class Описание() {
-
-}
-
-case class Утверждение(
-  действие: Option[Действие] = None, 
-  подробности: Map[Вопрос, List[Ответ]] = Map.empty
+case class Description(
+  question: Option[Question] = None,
+  answer: Option[Answer] = None,
+  descriptions: List[Description] = List.empty
 ) {
-  def -(утверждение: Утверждение) = Утверждение(
-    if (утверждение.действие == действие) None else действие, 
-    (подробности.toSet diff утверждение.подробности.toSet).toMap
-  )
-
-  def +(утверждение: Утверждение) = Утверждение(
-    if (утверждение.действие == None) действие else утверждение.действие, 
-    (подробности.toSet union утверждение.подробности.toSet).toMap
-  )
+  def +(otherDescription: Description): Description = otherDescription match {
+    // both empty
+    case Description(None, None, Nil) 
+      if question == None && answer == None && descriptions == Nil 
+        => this
+    // other empty, this non-empty
+    case Description(None, None, Nil) 
+      if question != None || answer != None || descriptions != Nil 
+        => this
+    // other non-empty, this empty
+    case Description(Some(_) | None, Some(_) | None, List(_) | Nil) 
+      if question == None && answer == None && descriptions == Nil 
+        => otherDescription
+    // both non-empty, same content
+    case Description(Some(otherQuestion), Some(otherAnswer), otherDescription) 
+      if question == otherQuestion && answer == otherAnswer && descriptions == otherDescription
+        => this
+    // both non-empty, same question and answer, different descriptions
+    case Description(Some(otherQuestion), Some(otherAnswer), otherDescriptions)
+      if question == otherQuestion && answer == otherAnswer && descriptions != otherDescriptions
+        => Description(
+          question,
+          answer,
+          otherDescriptions ::: descriptions
+        )
+    case _ => this
+  }
 }
 
-case class Действие(словосочетание: String) {
-  
-}
-
-case class Вопрос(словосочетание: String) {
+case class Question(words: String) {
 
 }
 
-case class Ответ(словосочетание: String) {
+case class Answer(words: String) {
 
 }
 
